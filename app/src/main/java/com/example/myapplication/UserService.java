@@ -28,6 +28,8 @@ public class UserService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         startCounter();
+
+
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -35,7 +37,7 @@ public class UserService extends Service {
 
         Thread countingThread = new Thread(() -> {
             int counter = 0;
-            String threadName = "Thread-" + threadIndex++;
+            String threadName = "Imie-" + threadIndex++;
 
             try {
                 while (!Thread.interrupted()) {
@@ -45,6 +47,8 @@ public class UserService extends Service {
                 }
             } catch (InterruptedException e) {
                 Log.d(TAG, "Thread interrupted");
+
+                sendBroadcastMessage(threadName, counter);
             }
         });
 
@@ -58,6 +62,13 @@ public class UserService extends Service {
         for (Thread runningThread: this.currentRunningThreads) {
             runningThread.interrupt();
         }
+    }
+
+    public void sendBroadcastMessage(String name, int counter) {
+        Intent newIntent = new Intent(UserActivity.NUMBER_RECEIVER_ACTION);
+        newIntent.putExtra(NumberReceiver.NUMBER_EXTRA, counter);
+        newIntent.putExtra(NumberReceiver.USER_NAME_EXTRA, name);
+        sendBroadcast(newIntent);
     }
 
     @Override

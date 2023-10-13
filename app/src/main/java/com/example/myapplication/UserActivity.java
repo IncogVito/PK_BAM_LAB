@@ -1,12 +1,32 @@
 package com.example.myapplication;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.widget.Button;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import androidx.room.Room;
+import com.example.myapplication.dao.AppDatabase;
 
 public class UserActivity extends AppCompatActivity {
+
+
+    public static String NUMBER_RECEIVER_ACTION = "NUMBER_RECEIVER_ACTION";
+    private IntentFilter filter = new IntentFilter(NUMBER_RECEIVER_ACTION);
+    private NumberReceiver numberReceiver = new NumberReceiver();
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        registerReceiver(numberReceiver, filter);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(numberReceiver);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
