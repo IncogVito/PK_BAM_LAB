@@ -5,15 +5,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import androidx.room.Room;
-import androidx.room.RoomDatabase;
 import com.example.myapplication.dao.AppDatabase;
+import com.example.myapplication.dao.User;
+import com.example.myapplication.dao.UserDAO;
 
 public class NumberReceiver extends BroadcastReceiver {
     public static final String NUMBER_EXTRA = "NUMBER_EXTRA";
     public static final String USER_NAME_EXTRA = "USER_NAME_EXTRA";
 
-    public NumberReceiver() {
-        Room.databaseBuilder(, AppDatabase.class, "person_db");
+    private final UserDAO userDAO;
+
+    public NumberReceiver(Context applicationContext) {
+        userDAO = Room.databaseBuilder(applicationContext, AppDatabase.class, "person_db")
+                .build()
+                .userDao();
     }
 
     @Override
@@ -25,5 +30,20 @@ public class NumberReceiver extends BroadcastReceiver {
         Log.d("USER: ",  user);
         Log.d("COUNTER: ",  "" + number);
 
+
+        Thread otherThread = new Thread(() -> {
+
+            User userDTO = new User();
+
+            userDTO.setUid(12);
+            userDTO.setNumber(2121);
+            userDTO.setUserName("SIEMA");
+            userDAO.insert(userDTO);
+
+
+            Log.d("USERs: ",  userDAO.getAll().toString());
+        });
+
+        otherThread.start();
     }
 }

@@ -14,7 +14,7 @@ public class UserActivity extends AppCompatActivity {
 
     public static String NUMBER_RECEIVER_ACTION = "NUMBER_RECEIVER_ACTION";
     private IntentFilter filter = new IntentFilter(NUMBER_RECEIVER_ACTION);
-    private NumberReceiver numberReceiver = new NumberReceiver();
+    private NumberReceiver numberReceiver;
 
     @Override
     public void onResume() {
@@ -32,6 +32,8 @@ public class UserActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
+
+        numberReceiver= new NumberReceiver(this.getApplicationContext());
 
         Intent intent = getIntent();
         TextView mEdit = findViewById(R.id.textView2);
